@@ -1,0 +1,9 @@
+<launch>
+    <!-- パラメータ設定セクション nodeとは独立させて書く-->
+    <param name="save_dir_name" value="/home/rokuto/"/>
+    <param name="subscribe_topic_name" value="/velodyne_points"/>
+    <param name="number_of_iterations" value="3"/>
+    <param name="sample_rate" value="0.5"/>
+    <param name="noise_variance" value="0.1"/>
+    <node name="rosbag_to_xyz" pkg="matching_viewer" type="bag2csv.py" output="screen" />
+</launch>

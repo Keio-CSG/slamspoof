@@ -1,0 +1,11 @@
+<launch>
+    <!-- パラメータ設定セクション nodeとは独立させて書く-->
+    <!-- param name="directory_name" value="/home/rokuto/result_1119449"/ -->
+    <param name="directory_name" value="/home/rokuto/result_19183434"/>
+    <param name="max_distance" value="40"/>
+    <param name="z_min" value="-1.5"/>
+    <param name="z_max" value="1.0"/>
+    <param name="spoofing_mode" value="HFR"/> <!-- HFR or AHFR -->
+    <node name="visualizer" pkg="spoofing_sim" type="heatmap_polar.py" output="screen" />
+</launch>
+

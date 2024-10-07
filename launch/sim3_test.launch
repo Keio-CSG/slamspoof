@@ -1,0 +1,79 @@
+<launch>
+    <!-- パラメータ設定セクション nodeとは独立させて書く-->
+    <!-- parameters for spoofing simulation node-->
+    <param name="subscribe_topic_name" value="/livox/lidar"/>
+    <param name="subscribe_odometry_name" value="/kiss/odometry"/>
+    <param name="number_of_iterations" value="1"/>
+    <param name="sample_rate" value="0.25"/>
+    <param name="noise_variance" value="0.1"/>
+    <param name="min_distance" value="2.5"/>
+    <param name="max_distance" value="30"/>
+    <param name="max_height" value="-1.5"/>
+    <param name="spoofed_frame_name" value="odom"/>
+    <param name="spoofing_mode" value="injection"/>
+    <param name="injection_distance" value="30.0" />
+
+    <param name="attackablity_save_dir" value="/home/rokuto/cbulid_ws/src/spoofing_sim/Attackablity_kiss_decided_noise/"/>
+    <param name="trajectory_save_dir" value="/home/rokuto/cbulid_ws/src/spoofing_sim/Trajectory_kiss_decided_noise/"/>
+
+    <!-- spoofer params -->
+    <arg name="x" default="20" />
+    <arg name="y" default="5" />
+
+    <param name="spoofing_max_distance" value="30.0"/>
+    <param name="spoofer_location_x" value="$(arg x)"/>
+    <param name="spoofer_location_y" value="$(arg y)"/>
+    <param name="min_spoofing_angle" value="15" />
+     <param name="max_spoofing_angle" value="165" />
+
+    <!-- lidar params -->
+    <param name="lidar_horizontal_resolution" value="0.15"/>
+    <param name="lidar_vertical_lines" value="40"/>
+    <param name="spofing_success_rate" value="0.05"/>
+
+    <node name="node1" pkg="spoofing_sim" type="node2.py" output="screen" required="true"/>
+    <node name="node2" pkg="spoofing_sim" type="odom_node.py" output="screen" required="true"/>
+
+    <!-- parameters for kiss icp -->
+    <!-- ROS paramaters -->
+    <arg name="bagfile" default=""/>
+    <arg name="visualize" default="true"/>
+    <arg name="odom_frame" default="odom"/>
+    <arg name="base_frame" default=""/>
+    <arg name="topic" default="/cloud_spoofed"/> <!-- spoofingされたtopic -->
+    <arg name="publish_odom_tf" default="false"/>
+
+    <!-- KISS-ICP paramaters -->
+    <arg name="deskew" default="false"/>
+    <arg name="max_range" default="100.0" />
+    <arg name="min_range" default="0.0" />
+    <arg name="voxel_size" default="" />
+
+    <!-- Odometry node -->
+    <node pkg="kiss_icp" type="odometry_node" name="odometry_node" output="screen" required="true">
+        <!-- ROS params -->
+        <remap from="pointcloud_topic" to="$(arg topic)"/>
+        <param name="odom_frame" value="$(arg odom_frame)"/>
+        <param name="base_frame" value="$(arg base_frame)"/>
+        <param name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
+        <param name="visualize" value="$(arg visualize)"/>
+        <!-- KISS-ICP params -->
+        <param name="max_range" value="$(arg max_range)"/>
+        <param name="min_range" value="$(arg min_range)"/>
+        <param name="deskew" value="$(arg deskew)"/>
+        <param name="voxel_size" value="$(arg voxel_size)"/>
+        <param name="max_points_per_voxel" value="20"/>
+        <param name="initial_threshold" value="2.0"/>
+        <param name="min_motion_th" value="0.1" />
+    </node>
+
+    <!-- Rosbag player, if bagfile argument was specified -->
+    <group if="$(eval bagfile != '')">
+        <node pkg="rosbag" type="play" name="player" args="$(arg bagfile)" output="screen"/>
+    </group>
+
+    <!-- Visualizer -->
+    <group if="$(arg visualize)">
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find kiss_icp)/rviz/kiss_icp_ros1.rviz"/>
+    </group>
+</launch>
