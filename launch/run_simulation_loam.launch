@@ -1,0 +1,65 @@
+<launch>
+
+    <arg name="wall_dist" default="30"/>
+    <arg name="max_dist" default="30"/>
+
+    <!-- parameters for spoofing simulation node-->
+    <param name="subscribe_topic_name" value="/velodyne_points"/> <!-- raw pointcloud topic -->
+    <param name="subscribe_odometry_name" value="/aft_mapped_to_init"/> 
+    <param name="number_of_iterations" value="1"/>
+    <param name="sample_rate" value="0.25"/>
+    <param name="noise_variance" value="0.1"/>
+    <param name="min_distance" value="2.5"/>
+    <param name="max_distance" value="30"/>
+    <param name="max_height" value="0.0"/>
+    <param name="spoofed_frame_name" value="odom"/>
+    <param name="spoofing_mode" value="injection"/> <!-- spoofing type (removal or injection) -->
+    <param name="injection_distance" value="$(arg wall_dist)" /> <!-- injected wall distance (from LiDAR to injected wall, injection mode only) -->
+    <param name="reference_trajectory_file" value="$(find slamspoof)/benign_traj/vlp32c_benign_1011_2.csv" /> <!-- reference trajectory -->
+    <param name="smvs_save_dir" value="$(find slamspoof)/SMVS_loam_1016/"/>
+    <param name="vulnerablity_save_dir" value="$(find slamspoof)/Vulnerablity_loam_1016/"/>
+    <param name="trajectory_save_dir" value="$(find slamspoof)/Trajectory_loam_1016/"/>
+
+    <!-- spoofer params -->
+    <arg name="x" default="12" /> <!-- spoofer location (x) -->
+    <arg name="y" default="12" />   <!-- spoofer location (y) -->
+
+    <param name="spoofing_max_distance" value="$(arg max_dist)"/> <!-- spoofing range (benign:0.0) -->
+    <param name="spoofer_location_x" value="$(arg x)"/>
+    <param name="spoofer_location_y" value="$(arg y)"/>
+    <param name="min_spoofing_angle" value="15" />
+    <param name="max_spoofing_angle" value="165" />
+
+    <!-- lidar params -->
+    <param name="lidar_topic_length" value="22"/> <!-- velodyne:22 livox:18 (point_step) -->
+    <param name="lidar_horizontal_resolution" value="0.15"/>
+    <param name="lidar_vertical_lines" value="32"/>
+    <param name="spoofing_success_rate" value="0.05"/>
+
+    <node name="node1" pkg="slamspoof" type="SpoofingSimulation.py" output="screen" required="true"/>
+    <node name="node2" pkg="slamspoof" type="odom_node.py" output="screen" required="true"/>
+
+    <!-- SLAM settings -->
+    <param name="scan_line" type="int" value="32" />
+
+    <!-- if 1, do mapping 10 Hz, if 2, do mapping 5 Hz. Suggest to use 1, it will adjust frequence automaticlly -->
+    <param name="mapping_skip_frame" type="int" value="1" />
+
+    <!-- remove too closed points -->
+    <param name="minimum_range" type="double" value="0.3"/>
+
+    <!-- setting lidar topic -->
+    <remap from="/velodyne_points" to="/cloud_spoofed"/>
+
+    <param name="mapping_line_resolution" type="double" value="0.1"/>
+    <param name="mapping_plane_resolution" type="double" value="0.2"/>
+    <node pkg="aloam_velodyne" type="ascanRegistration" name="ascanRegistration" output="screen" />
+    <node pkg="aloam_velodyne" type="alaserOdometry" name="alaserOdometry" output="screen" />
+    <node pkg="aloam_velodyne" type="alaserMapping" name="alaserMapping" output="screen" />
+
+    <arg name="rviz" default="true" />
+    <group if="$(arg rviz)">
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find aloam_velodyne)/rviz_cfg/aloam_velodyne.rviz" />
+    </group>
+
+</launch>

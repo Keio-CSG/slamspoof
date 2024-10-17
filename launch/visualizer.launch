@@ -1,0 +1,4 @@
+<launch>
+    <param name="vulnerablity_file_path" value="$(find slamspoof)/Vulnerablity_1011/vul_1011_2.csv"/>
+    <node name="visualizer_node" pkg="slamspoof" type="calc_spoofer_loc.py" output="screen"/>
+</launch>
