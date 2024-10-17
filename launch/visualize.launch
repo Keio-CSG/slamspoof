@@ -1,9 +1,0 @@
-<launch>
-    <!-- パラメータ設定セクション nodeとは独立させて書く-->
-    <param name="directory_name" value="/home/rokuto/result_5133130"/>
-    <param name="visualize_3d" value="True"/> <!-- True or False (Python Boolian) -->
-    <param name="max_distance" value="30"/>
-    <param name="z_min" value="-1.5"/>
-    <param name="z_max" value="1.0"/>
-    <node name="visualize_tool" pkg="matching_viewer" type="visualize.py" output="screen" />
-</launch>
