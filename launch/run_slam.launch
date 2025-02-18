@@ -1,0 +1,66 @@
+<launch>
+    <arg name="bagfile" default=""/>
+    <arg name="name_smvs_dir" default="$(find slamspoof_icra)/SMVS/" />
+    <arg name="name_vul_dir" default="$(find slamspoof_icra)/Vulnerablity/" />
+    <arg name="name_traj_dir" default="$(find slamspoof_icra)/Trajectory/" />
+
+    <!-- parameters for spoofing simulation node-->
+    <param name="subscribe_topic_name" value="/velodyne_points"/> <!-- raw pointcloud topic -->
+    <param name="subscribe_odometry_name" value="/kiss/odometry"/> 
+    <param name="number_of_iterations" value="1"/>
+    <param name="sample_rate" value="0.25"/>
+    <param name="noise_variance" value="0.1"/>
+
+    <!-- lidar params -->
+    <param name="lidar_topic_length" value="22"/> <!-- velodyne:22 livox:18 (point_step) spoofed:12 -->
+
+    <!-- launch node -->
+    <node name="node1" pkg="slamspoof_icra" type="SpoofingSimulation.py" output="screen" required="true"/>
+        <param name="smvs_save_dir" value="$(arg name_smvs_dir)"/>
+        <param name="vulnerablity_save_dir" value="$(arg name_vul_dir)"/>
+    <node name="node2" pkg="slamspoof_icra" type="odom_node.py" output="screen" required="true"/>
+        <param name="trajectory_save_dir" value="$(arg name_traj_dir)"/>
+
+    <!-- parameters for kiss icp -->
+    <!-- ROS paramaters -->
+    <arg name="visualize" default="true"/>
+    <arg name="odom_frame" default="odom"/>
+    <arg name="base_frame" default=""/>
+    <arg name="topic" default="/velodyne_points"/> <!-- input pointcloud topic(spoofed) -->
+    <arg name="publish_odom_tf" default="false"/>
+
+    <!-- KISS-ICP paramaters -->
+    <arg name="deskew" default="false"/>
+    <arg name="max_range" default="100.0" />
+    <arg name="min_range" default="0.0" />
+    <arg name="voxel_size" default="" />
+
+    <!-- Odometry node -->
+    <node pkg="kiss_icp" type="odometry_node" name="odometry_node" output="screen" required="true">
+
+        <!-- ROS params -->
+        <remap from="pointcloud_topic" to="$(arg topic)"/>
+        <param name="odom_frame" value="$(arg odom_frame)"/>
+        <param name="base_frame" value="$(arg base_frame)"/>
+        <param name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
+        <param name="visualize" value="$(arg visualize)"/>
+        <!-- KISS-ICP params -->
+        <param name="max_range" value="$(arg max_range)"/>
+        <param name="min_range" value="$(arg min_range)"/>
+        <param name="deskew" value="$(arg deskew)"/>
+        <param name="voxel_size" value="$(arg voxel_size)"/>
+        <param name="max_points_per_voxel" value="20"/>
+        <param name="initial_threshold" value="2.0"/>
+        <param name="min_motion_th" value="0.1" />
+    </node>
+
+    <!-- Rosbag player, if bagfile argument was specified -->
+    <group if="$(eval bagfile != '')">
+        <node pkg="rosbag" type="play" name="player2" args="$(arg bagfile)" output="screen"/>
+    </group>
+
+    <!-- Visualizer -->
+    <group if="$(arg visualize)">
+        <node pkg="rviz" type="rviz" name="rviz2" args="-d $(find kiss_icp)/rviz/kiss_icp_ros1.rviz"/>
+    </group>
+</launch>

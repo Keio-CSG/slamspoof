@@ -1,0 +1,30 @@
+{
+    "main": {
+      "input_file":"/home/rokuto/10_11.bag",
+      "output_file":"/home/rokuto/cbuild_ws/src/slamspoof_icra/10_11_test.bag",
+      "spoofing_mode":"removal",
+      "spoofer_x":0,
+      "spoofer_y":0, 
+      "distance_threshold":30,
+      "lidar_topic":"/velodyne_points",
+      "lidar_topic_length":22,
+      "imu_topic":"/imu",
+      "spoofed_topic":"/velodyne_points",
+      "spoofing_range":80,
+      "wall_dist":15
+    },
+    "simulator": {
+        "horizontal_resolution":0.2,
+        "vertical_lines":32,
+        "spoofing_rate":0.3,
+        "minimum_distance":0.0,
+        "maximum_distance":30.0
+      },
+      "filtering":{
+        "minimum_measuring_distance":0.0,
+        "maximum_measuring_distance":30.0,
+        "minimum_height_threshold":-2.0
+      }
+  }
+
+  

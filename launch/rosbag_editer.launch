@@ -1,0 +1,6 @@
+<launch>
+    <!-- launch node -->
+    <arg name="config_file_path" default="$(find slamspoof_icra)/config.json"/>
+    <node name="edit_node" pkg="slamspoof_icra" type="spoofing_editer_imu.py" output="screen" required="true"/>
+        <param name="config_file" value="$(arg config_file_path)" />
+</launch>
