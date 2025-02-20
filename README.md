@@ -1,5 +1,9 @@
 # Slamspoof
 
+Codes for (ICRA'25) "SLAMSpoof: Practical LiDAR Spoofing Attacks on Localization Systems Guided by Scan Matching Vulnerability Analysis"
+
+[Paper Link](https://arxiv.org/abs/2502.13641)
+
 # What is Slamspoof ? 
 Slamspoof is a framework that analyzes LiDAR SLAM and reveals vulnerabilities to adversarial laser pulse injections, or LiDAR spoofing. The vulnerabilities are quantitatively evaluated using the SMVS (Scan Matching Vulnerability Score) metric, and the values can be referenced across the entire map. Please note that this repository focuses on localization using LiDAR-based localization (Visual Odometry is not covered, sorry). Additionally, the framework supports kiss-icp and A-LOAM as localization methods.
 
