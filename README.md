@@ -1,4 +1,5 @@
 # Slamspoof
+![image](https://github.com/user-attachments/assets/be19664d-a777-4811-9141-d388a6730115)
 
 Codes for (ICRA'25) "SLAMSpoof: Practical LiDAR Spoofing Attacks on Localization Systems Guided by Scan Matching Vulnerability Analysis"
 
