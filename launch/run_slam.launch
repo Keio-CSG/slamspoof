@@ -1,8 +1,8 @@
 <launch>
     <arg name="bagfile" default=""/>
-    <arg name="name_smvs_dir" default="$(find slamspoof_icra)/SMVS/" />
-    <arg name="name_vul_dir" default="$(find slamspoof_icra)/Vulnerablity/" />
-    <arg name="name_traj_dir" default="$(find slamspoof_icra)/Trajectory/" />
+    <arg name="name_smvs_dir" default="$(find slamspoof)/SMVS/" />
+    <arg name="name_vul_dir" default="$(find slamspoof)/Vulnerablity/" />
+    <arg name="name_traj_dir" default="$(find slamspoof)/Trajectory/" />
 
     <!-- parameters for spoofing simulation node-->
     <param name="subscribe_topic_name" value="/velodyne_points"/> <!-- raw pointcloud topic -->
@@ -15,10 +15,10 @@
     <param name="lidar_topic_length" value="22"/> <!-- velodyne:22 livox:18 (point_step) spoofed:12 -->
 
     <!-- launch node -->
-    <node name="node1" pkg="slamspoof_icra" type="SpoofingSimulation.py" output="screen" required="true"/>
+    <node name="node1" pkg="slamspoof" type="SpoofingSimulation.py" output="screen" required="true"/>
         <param name="smvs_save_dir" value="$(arg name_smvs_dir)"/>
         <param name="vulnerablity_save_dir" value="$(arg name_vul_dir)"/>
-    <node name="node2" pkg="slamspoof_icra" type="odom_node.py" output="screen" required="true"/>
+    <node name="node2" pkg="slamspoof" type="odom_node.py" output="screen" required="true"/>
         <param name="trajectory_save_dir" value="$(arg name_traj_dir)"/>
 
     <!-- parameters for kiss icp -->
