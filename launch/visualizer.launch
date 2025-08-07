@@ -1,5 +1,5 @@
 <launch>
-    <arg name="smvs_file_path" default="$(find slamspoof_icra)/SMVS/02_12_13_38_33.csv"/>
-    <node name="visualize_node" pkg="slamspoof_icra" type="visualize.py" output="screen" required="true"/>
+    <arg name="smvs_file_path" default="$(find slamspoof)/SMVS/your_file.csv"/>
+    <node name="visualize_node" pkg="slamspoof" type="visualize.py" output="screen" required="true"/>
         <param name="smvs_file_name" value="$(arg smvs_file_path)"/>
 </launch>
