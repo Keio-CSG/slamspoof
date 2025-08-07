@@ -34,8 +34,8 @@ Publication: IEEE International Conference on Robotics and Automation (ICRA), 20
     catkin build
     source devel/setup.bash
     ```
-- kiss-icp
-  - Install [here](https://github.com/PRBonn/kiss-icp)
+- A-LOAM
+  - Install [here](https://github.com/HKUST-Aerial-Robotics/A-LOAM)
 
 - small_gicp
   - Install [here](https://github.com/koide3/small_gicp). We recommend installation from source.
@@ -62,7 +62,7 @@ source devel/setup.bash
     - Simulation of LiDAR Spoofing Attacks
 ## How to run SLAM and calculate SMVS
   ```
-  roslaunch slamspoof run_slam.launch
+  roslaunch slamspoof run_slam_loam.launch
   ```
 And run rosbag in another terminal
   ```
@@ -78,6 +78,8 @@ And run rosbag in another terminal
   - If you use Velodyne LiDAR, set value 22
   - If you use Livox LiDAR, set value 18
   - If you use Pointcloud topic edited rosbag_editer.launch, set value 12
+- Line 34 Remapping Pointcloud topic name
+  - Example:If you use `/your_pointcloud` as a pointcloud topic name, set `<remap from="/velodyne_points" to="/your_pointcloud"/> `
 
 ## How to visualize SMVS
 ```
