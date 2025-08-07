@@ -6,7 +6,7 @@
 
     <!-- parameters for spoofing simulation node-->
     <param name="subscribe_topic_name" value="/velodyne_points"/> <!-- raw pointcloud topic -->
-    <param name="subscribe_odometry_name" value="/kiss/odometry"/> 
+    <param name="subscribe_odometry_name" value="/aft_mapped_to_init"/> 
     <param name="number_of_iterations" value="1"/>
     <param name="sample_rate" value="0.25"/>
     <param name="noise_variance" value="0.1"/>
