@@ -1,7 +1,7 @@
 {
     "main": {
-      "input_file":"/home/rokuto/10_11.bag",
-      "output_file":"/home/rokuto/cbuild_ws/src/slamspoof_icra/10_11_test.bag",
+      "input_file":"/home/your_directory/10_11.bag",
+      "output_file":"/home/your_directory/catkin_ws/src/slamspoof/10_11_test.bag",
       "spoofing_mode":"removal",
       "spoofer_x":0,
       "spoofer_y":0, 
