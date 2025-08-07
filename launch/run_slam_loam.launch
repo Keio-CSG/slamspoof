@@ -1,0 +1,48 @@
+<launch>
+    <arg name="bagfile" default=""/>
+    <arg name="name_smvs_dir" default="$(find slamspoof)/SMVS/" />
+    <arg name="name_vul_dir" default="$(find slamspoof)/Vulnerablity/" />
+    <arg name="name_traj_dir" default="$(find slamspoof)/Trajectory/" />
+
+    <!-- parameters for spoofing simulation node-->
+    <param name="subscribe_topic_name" value="/velodyne_points"/> <!-- raw pointcloud topic -->
+    <param name="subscribe_odometry_name" value="/kiss/odometry"/> 
+    <param name="number_of_iterations" value="1"/>
+    <param name="sample_rate" value="0.25"/>
+    <param name="noise_variance" value="0.1"/>
+
+    <!-- lidar params -->
+    <param name="lidar_topic_length" value="22"/> <!-- velodyne:22 livox:18 (point_step) spoofed:12 -->
+
+    <!-- launch node -->
+    <node name="node1" pkg="slamspoof" type="SpoofingSimulation.py" output="screen" required="true"/>
+        <param name="smvs_save_dir" value="$(arg name_smvs_dir)"/>
+        <param name="vulnerablity_save_dir" value="$(arg name_vul_dir)"/>
+    <node name="node2" pkg="slamspoof" type="odom_node.py" output="screen" required="true"/>
+        <param name="trajectory_save_dir" value="$(arg name_traj_dir)"/>
+
+    <!-- A-LOAM launch -->
+    <param name="scan_line" type="int" value="32" /> <!-- Number of vertical lines in LiDAR. e.g. Velodyne_VLP-16:value=16-->
+
+    <!-- if 1, do mapping 10 Hz, if 2, do mapping 5 Hz. Suggest to use 1, it will adjust frequence automaticlly -->
+    <param name="mapping_skip_frame" type="int" value="1" />
+
+    <!-- remove too closed points -->
+    <param name="minimum_range" type="double" value="0.3"/>
+
+    <!-- setting lidar topic -->
+    <remap from="/velodyne_points" to="/velodyne_points"/> 
+    
+    <param name="mapping_line_resolution" type="double" value="0.1"/>
+    <param name="mapping_plane_resolution" type="double" value="0.2"/>
+    <node pkg="aloam_velodyne" type="ascanRegistration" name="ascanRegistration" output="screen" />
+    <node pkg="aloam_velodyne" type="alaserOdometry" name="alaserOdometry" output="screen" />
+    <node pkg="aloam_velodyne" type="alaserMapping" name="alaserMapping" output="screen" />
+
+    <arg name="rviz" default="true" />
+    <group if="$(arg rviz)">
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find aloam_velodyne)/rviz_cfg/aloam_velodyne.rviz" />
+    </group>
+
+
+</launch>
