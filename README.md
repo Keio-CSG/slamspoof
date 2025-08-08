@@ -68,6 +68,8 @@ And run rosbag in another terminal
   ```
   rosbag play (your_rosbag).bag
   ```
+### Example
+An example rosbag is available. Please download it from the following link:(https://drive.google.com/file/d/1p4CjWm4BZ-QjbCw1od-qyOYsck_-l5Q1/view?usp=sharing) 
 ### Settings 
 - Line 3,4,5: Directory path to save simulation results.
   - Line 3: `name_smvs_dir` is path for storing SMVS data
